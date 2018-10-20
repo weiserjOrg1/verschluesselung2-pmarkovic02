@@ -1,85 +1,94 @@
 package markovic.cipher;
 
 public class MonoAlphabeticCipher implements Cipher{
+	//Attribute
 	private String secretAlphabet;
 	
-	
+	//Konstruktor
 	public MonoAlphabeticCipher() {
-		this.secretAlphabet = "abcdefghijklmnopqrstuvwxyzäöüß";
+		this.secretAlphabet="abcdefghijklmnopqrstuvwxyzäöüß";
 	}
-	
-	public String getSecretAlphabet() {
+	public String encrypt(String text) {
+		text=text.toLowerCase();
+		String encText=""; 
+		String nAlph="abcdefghijklmnopqrstuvwxyzäöüß";
+		for(int i=0; i<text.length(); i++) {
+			char a=text.charAt(i);
+			int index= nAlph.indexOf(a); 
+			if(index!=-1) {
+				encText=encText+this.secretAlphabet.charAt(index);
+			} else {
+				encText=encText+a;
+			}
+		}		
+		return encText; 
+	}
+	public String getSecretAlphabetic() {
 		return this.secretAlphabet;
 	}
-	
-	protected void setSecretAlphabet(String secretAlphabet) {
-		//Hier kommen ein TRY CATCH
-		try {
-            this.secretAlphabet = testerSecretAlph(secretAlphabet);
-        }catch(inseption e) {
-            System.out.println(e.toString());
-        }
+	protected void setSecretAlphabet(String secretAlphabet) throws inseption{
+		this.secretAlphabet= checkSecret(secretAlphabet);
 	}
-	
-	public String encrypt(String text) {
-		String defaultAlph="abcdefghijklmnopqrstuvwxyzäöüß";
-		String encryptedText="";
-		text=text.toLowerCase();
-		for(int i=0;i<text.length();i++) {
-			char c = text.charAt(i);
-			int place=defaultAlph.indexOf(c);
-			if(place==-1) {
-				encryptedText=encryptedText+c;
-			}else {
-				encryptedText=encryptedText+this.secretAlphabet.charAt(place);
-			}
-		}
-			return encryptedText;
-	}
-	
+
+
 	
 	public String decrypt(String text) {
-		String defaultAlph="abcdefghijklmnopqrstuvwxyzäöüß";
-		String decryptedText="";
-		text=text.toLowerCase();
-		for(int i=0;i<text.length();i++) {
-			char c = text.charAt(i);
-			int place=secretAlphabet.indexOf(c);
-			if(place==-1) {
-				decryptedText=decryptedText+c;
-			}else {
-				decryptedText=decryptedText+defaultAlph.charAt(place);
+		//text=text.toLowerCase();
+		String decText="";
+		String nAlph="abcdefghijklmnopqrstuvwxyzäöüß";
+		for(int i=0; i<text.length(); i++) {
+			char a=text.charAt(i);
+			int index=this.secretAlphabet.indexOf(a);
+			if(index!=-1) {
+				decText= decText+nAlph.charAt(index);
+			} else {
+				decText= decText + a; 
+			}
+					
+		}
+		return decText; 
+	}
+	public String checkSecret(String secAlph) throws inseption{
+		secAlph= secAlph.toLowerCase();
+		
+		//1)
+		if(secAlph.length()>30) {
+			throw new inseption("zu lang"); 
+		}
+		
+		if(secAlph.length()<30) {
+			throw new inseption("zu kurz"); 
+		}
+		
+		//2)
+		for(int i=0; i<secAlph.length(); i++) {
+            int help1 = 0;
+            for(int j=0; j<secAlph.length(); j++) {
+                if(secAlph.charAt(i) == secAlph.charAt(j)) {
+                    help1++;
+                    if(help1 > 1) {
+                        throw new inseption("2 gleiche Zeichen");
+                    }
+                }
+            }
+        }
+		String gültig="abcdefghijklmnopqrstuvwxyzäöüß";
+		int help2=0;
+		for(int i=0; i<secAlph.length(); i++) {
+			for(int j=0; j<secAlph.length(); j++) {
+				char a= gültig.charAt(i);
+				char b= secAlph.charAt(j);
+				if(a==b) {
+					help2++;
+				}
 			}
 		}
-		return decryptedText;
-	}
-	
-	public String testerSecretAlph(String secretAlph) throws inseption {
-		secretAlph = secretAlph.toLowerCase();
-		//criteria 
-        //30
-        if(secretAlphabet.length() !=30) {
-            throw new inseption("The criteria for the secret alphabet was not fulfilled! (Length is not 30!)");
-        }
-
-        //1x character
-        for(int i = 0; i < secretAlphabet.length(); i++) {
-            char c = secretAlphabet.charAt(i);
-            if(secretAlphabet.indexOf(c) == secretAlphabet.lastIndexOf(c)) {
-
-            }else {
-                throw new inseption("The criteria for the secret alphabet was not fulfilled! (The characters of the secret alphabet are not unique!)");
-            }
-        }
-
-        //invalid characters
-        for(int i = 0; i < secretAlphabet.length(); i++) {
-        	char c = secretAlphabet.charAt(i);
-            if(c >= 97 && c <= 122 || c == 246 || c == 228 || c == 252 || c == 223) {
-            }else {
-                throw new inseption("The criteria for the secret alphabet was not fulfilled! (The characters of the secret alphabet are not unique!)");
-            }
-        }
-        return secretAlph;
+		if(help2==30) {
+			
+		}else {
+			throw new inseption("Sonderzeichen im String"); 
+		}
+		
+		return secAlph;
 	}
 }

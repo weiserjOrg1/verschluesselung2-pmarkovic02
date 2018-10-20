@@ -1,12 +1,12 @@
 package markovic.cipher;
-
 public class inseption extends Exception{
+	
 	public inseption() {
-		//Standartfehlermeldung
-		super("Pita ausverkauft");
+		super("Falsches Alphabet");
 	}
-	public inseption(String fehlermessage) {
-		//Benutzerdefinierte Fehlermeldung
-		super(fehlermessage);
+	
+	public inseption(String txt) {
+		super(txt);
+		
 	}
 }
